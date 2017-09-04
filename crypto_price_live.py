@@ -3,15 +3,15 @@ import time
 from sys import stdout
 
 # put the number of coins and the price based on the date as below
-LTC_holdings = {"2014-03-22": 2.4994, "2017-09-01": 2.5}
-LTC_price = {"2014-03-22": 15.81, "2017-09-01": 79.24}
+LTC_holdings = {"2014-03-22": 2.4994, "2017-09-01": 2.5, "2017-09-04": 2}
+LTC_price = {"2014-03-22": 15.81, "2017-09-01": 79.24, "2017-09-04": 65.25}
 
 sum_holdings = 0
 sum_price = 0
 
 # print a summary of what you have before you calculate current market value
 print "*" * 80
-for item in LTC_holdings.iterkeys():
+for item in sorted(LTC_holdings.iterkeys()):
     print "Bought or Mined: %s LTC's on %s @ %s for a total of: %s" \
           % (LTC_holdings[item], item,
              '${:0,.2f}'.format(LTC_price[item]),
@@ -37,4 +37,4 @@ while True:
 
                      )
         stdout.flush()
-        time.sleep(3)
+        time.sleep(2)
