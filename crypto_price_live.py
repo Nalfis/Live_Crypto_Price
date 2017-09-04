@@ -29,7 +29,12 @@ while True:
         print "Something is wrong with the URL or the API-Get request"
     else:
         live_LTC = get_LTC_price.json()
-        stdout.write("\rLive Price: %s -:- Current Value of Total LTC holdings: %s" %
-                     ('${:0,.2f}'.format(live_LTC['USD']), '${:0,.2f}'.format(live_LTC['USD']*sum_holdings)))
+        stdout.write("\rLive Price: %s -:- Current Value of Total LTC holdings: %s -:- Net Gain/Loss: %s" %
+                     ('${:0,.2f}'.format(live_LTC['USD']),
+                      '${:0,.2f}'.format(live_LTC['USD']*sum_holdings),
+                      '${:0,.2f}'.format((live_LTC['USD'] * sum_holdings) - sum_price)
+                      )
+
+                     )
         stdout.flush()
         time.sleep(3)
