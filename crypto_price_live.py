@@ -1,10 +1,11 @@
 import requests
 import time
 from sys import stdout
+import yaml
 
 # put the number of coins and the price based on the date as below
-LTC_holdings = {"2014-03-22": 2.4994, "2017-09-01": 2.5, "2017-09-04": 2}
-LTC_price = {"2014-03-22": 15.81, "2017-09-01": 79.24, "2017-09-04": 65.25}
+LTC_holdings = {"2014-03-22": 2.4994, "2017-09-01": 2.5}
+LTC_price = {"2014-03-22": 15.81, "2017-09-01": 79.24}
 
 sum_holdings = 0
 sum_price = 0
@@ -22,19 +23,22 @@ print "Total Number of LTC's: %s" % sum_holdings
 print "Total Value of LTC's: %s" % '${:0,.2f}'.format(sum_price)
 
 print "*" * 80
-# getting realtime price of litecoin and display
+
+# getting realtime price of LTC-USD from gdax
 while True:
-    get_LTC_price = requests.get('https://min-api.cryptocompare.com/data/price?fsym=LTC&tsyms=USD')
+
+    get_LTC_price = requests.get('https://api.gdax.com/products/LTC-USD/ticker')
+
     if get_LTC_price.status_code != 200:
         print "Something is wrong with the URL or the API-Get request"
+        break
     else:
         live_LTC = get_LTC_price.json()
         stdout.write("\rLive Price: %s -:- Current Value of Total LTC holdings: %s -:- Net Gain/Loss: %s" %
-                     ('${:0,.2f}'.format(live_LTC['USD']),
-                      '${:0,.2f}'.format(live_LTC['USD']*sum_holdings),
-                      '${:0,.2f}'.format((live_LTC['USD'] * sum_holdings) - sum_price)
+                     ('${:0,.2f}'.format(float(live_LTC['price'])),
+                      '${:0,.2f}'.format(float(live_LTC['price'])*sum_holdings),
+                      '${:0,.2f}'.format((float(live_LTC['price']) * sum_holdings) - sum_price)
                       )
-
                      )
         stdout.flush()
-        time.sleep(2)
+        time.sleep(1)

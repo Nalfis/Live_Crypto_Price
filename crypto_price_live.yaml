@@ -1,0 +1,30 @@
+url:
+  cryptocompare: https://min-api.cryptocompare.com/data/price?fsym=LTC&tsyms=USD
+
+cryptocurrency:
+  BTC:
+  ETC:
+  LTC:
+    1: 2017-09-01|2.5|79.5
+    2: 2014-03-22|2.49994|15.81
+
+sleeptime: 2
+
+
+# with open("crypto_price_live.yaml", 'r') as ymlfile:
+#     cfg = yaml.load(ymlfile)
+#
+# # for a in cfg.iterkeys():
+# #     print a
+# #
+# # for e in cfg['url'].iterkeys():
+# #     print "ramon " + e
+# #
+# # for i in cfg['cryptocurrency'].iterkeys():
+# #     print "felipe " + i
+# date=[]
+# for key in cfg['cryptocurrency']['LTC'].iterkeys():
+#     print cfg['cryptocurrency']['LTC'][key]
+#     date.append(cfg['cryptocurrency']['LTC'][key].split("|"))
+#
+# print date
