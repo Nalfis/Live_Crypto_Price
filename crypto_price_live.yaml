@@ -1,5 +1,6 @@
 url:
-  cryptocompare: https://min-api.cryptocompare.com/data/price?fsym=LTC&tsyms=USD
+  cryptocompare: https://min-api.cryptocompare.com/data/price?fsym=LTC&tsyms=USD&e=Coinbase
+  gdax: https://api.gdax.com/products/LTC-USD/ticker
 
 cryptocurrency:
   BTC:
@@ -8,7 +9,7 @@ cryptocurrency:
     1: 2017-09-01|2.5|79.5
     2: 2014-03-22|2.49994|15.81
 
-sleeptime: 2
+sleeptime: 1
 
 
 # with open("crypto_price_live.yaml", 'r') as ymlfile:
