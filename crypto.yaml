@@ -1,0 +1,12 @@
+  url:
+  gdax: https://api.gdax.com/
+
+auth:
+  api_key: 
+  pass_ph: 
+  api_sec: 
+
+crypto_currency:
+  Litecoin: LTC-USD
+  Bitcoin: BTC-USD
+  Ethirium: ETH-USD
