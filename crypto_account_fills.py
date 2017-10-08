@@ -45,11 +45,27 @@ auth = CoinbaseExchangeAuth(API_KEY, API_SECRET, API_PASS)
 
 # Get accounts
 accounts = requests.get(api_url + 'accounts', auth=auth)
-ramon = accounts.json()
-#print json.dumps(accounts.json(), indent=4, sort_keys=True)
+coins = accounts.json()
 
-for key in ramon[1]:
-    print ramon[0][key][1]
+#print json.dumps(coins, indent=4, sort_keys=True)
+
+for key, currency in enumerate((c['currency'], c['balance']) for c in coins):
+    if currency[0] == 'LTC':
+        current_ltc_quant = currency[1]
+    if currency[0] == 'USD':
+        current_usd = currency[1]
+
+while True:
+    get_LTC_price = requests.get('https://min-api.cryptocompare.com/data/price?fsym=LTC&tsyms=USD')
+    if get_LTC_price.status_code != 200:
+        print "Something is wrong with the URL or the API-Get request"
+    else:
+        live_LTC = get_LTC_price.json()
+        stdout.write("\rLive Price: %s Current Value of Total LTC holdings: %s" %
+                     ('${:0,.2f}'.format(live_LTC['USD']), '${:0,.2f}'.format(live_LTC['USD'] *
+                                                                              (float(current_ltc_quant)))))
+        stdout.flush()
+        time.sleep(2)
 
 # Place an order
 # order = {
