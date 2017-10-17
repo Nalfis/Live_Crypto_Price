@@ -49,17 +49,18 @@ def get_current_fill(days=0):
     # Get accounts
     fills = requests.get(api_url + 'fills', auth=auth)
     list_fills = fills.json()
-    LTC = list_fills
+    # Get the number  when the order was filled
     day = days * - 1
     fill_date = (datetime.datetime.now() + datetime.timedelta(days=day)).strftime('%Y-%m-%d')
+    # Initialise variables
     buy_sum_size = 0
     sell_sum_size = 0
     buy_fee = 0
     sell_fee = 0
     buy_sum_price = 0
     sell_sum_price = 0
-
-    for k in LTC:
+    # Iterate through the list of dictionaries to find the LTC fills made on X day
+    for k in list_fills:
         if k['product_id'] == "LTC-USD" and k['created_at'][:10] == fill_date and k['side'] == 'buy':
             print "side: {} - size: {} * price ${:,.5f} fee: ${:,.5f} - date: {}".format(k['side'],
                                                                                          k['size'],
@@ -78,7 +79,7 @@ def get_current_fill(days=0):
             sell_sum_price += (float(k['size']) * (float(k['price']) + float(k['fee'])))
             sell_sum_size += float(k['size'])
             sell_fee += float(k['fee'])
-
+    # catch divisions with zero trades on the X day
     if buy_sum_size > 0:
         buy_avg_price = buy_sum_price / buy_sum_size
     else:
@@ -87,7 +88,7 @@ def get_current_fill(days=0):
         sell_avg_price = sell_sum_price / sell_sum_size
     else:
         sell_avg_price = 0
-
+    # print summary of buys and/or sells for X day
     print "\n\n"
     print "Traded on: {}".format(fill_date)
     print "*" * 45
