@@ -6,8 +6,9 @@
 #
 #   easy_install requests
 
-import json, hmac, hashlib, time, requests, base64, yaml, datetime
+import json, hmac, hashlib, time, requests, base64, yaml, datetime, time
 from requests.auth import AuthBase
+from sys import stdout
 
 # Create custom authentication for Exchange
 
@@ -46,7 +47,7 @@ auth = CoinbaseExchangeAuth(API_KEY, API_SECRET, API_PASS)
 
 
 def get_current_fill(days=0):
-    # Get accounts
+    # Get Fills information
     fills = requests.get(api_url + 'fills', auth=auth)
     list_fills = fills.json()
     # Get the number  when the order was filled
@@ -89,29 +90,59 @@ def get_current_fill(days=0):
     else:
         sell_avg_price = 0
     # print summary of buys and/or sells for X day
-    print "\n\n"
+    print "\n"
     print "Traded on: {}".format(fill_date)
     print "*" * 45
     print "Total LTC Bought: {:,.5f} \nPrice Paid: ${:,.2f} \nAverage Price Paid: ${:,.2f}".format(buy_sum_size,
-                                                                                                   buy_avg_price,
+                                                                                                   buy_sum_price,
                                                                                                    buy_avg_price)
     print "*" * 45
     print "Total LTC Sold: {:,.5f} \nFor a Total Of: ${:,.2f} \nAverage Price Sold: ${:,.2f}".format(sell_sum_size,
-                                                                                                     sell_avg_price,
+                                                                                                     sell_sum_price,
                                                                                                      sell_avg_price)
     print "*" * 45
+    return buy_sum_price
+
+
+def get_current_position():
+    # Get Position Information
+    position = requests.get(api_url + 'position', auth=auth)
+    list_position = position.json()
+
+    #print json.dumps(list_position, indent=4)
+
+    ltc_balance = float(list_position['accounts']['LTC']['balance'])
+    usd_balance = float(list_position['accounts']['USD']['balance'])
+
+    print "\n"
+    print "*" * 30
+    print "Current LTC Balance: {:,.5f} \nCurrent USD Balance: {:,.2f}".format(ltc_balance,
+                                                                               usd_balance)
+    print "*" * 30
+    return ltc_balance
+
+
+def get_ticker(buy_sum_price, ltc_balance):
+
+    while True:
+
+        ticker = requests.get(api_url + 'products/LTC-USD/ticker')
+
+        if ticker.status_code != 200:
+            print "Something is wrong with the URL or the API-Get request"
+            break
+        else:
+            live_LTC = ticker.json()
+            stdout.write("\rLive Price: %s -:- Current Value of Total LTC holdings: %s -:- Net Gain/Loss: %s" %
+                         ('${:0,.2f}'.format(float(live_LTC['price'])),
+                          '${:0,.2f}'.format(float(live_LTC['price']) * ltc_balance),
+                          '${:0,.2f}'.format((float(live_LTC['price']) * ltc_balance) - buy_sum_price)
+                          )
+                         )
+            stdout.flush()
+            time.sleep(cfg['sleeptime'])
 
 
 if __name__ == '__main__':
-    get_current_fill(3)
-
-# Place an order
-# order = {
-#     'size': 1.0,
-#     'price': 1.0,
-#     'side': 'buy',
-#     'product_id': 'BTC-USD',
-# }
-# r = requests.post(api_url + 'orders', json=order, auth=auth)
-# print r.json()
-# {"id": "0428b97b-bec1-429e-a94c-59992926778d"}
+    pass
+    get_ticker(get_current_fill(-1), get_current_position())
