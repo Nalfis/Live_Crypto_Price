@@ -2,9 +2,9 @@ url:
   gdax: https://api.gdax.com/
 
 auth:
-  api_key: 960376d74ddaa35f3d4991a6da1cc0b4
-  pass_ph: 1pxufj0ys1a
-  api_sec: 4/KNSPax/j8qpW4nj7jlxGvrf/JO5lHqCLPl1dK8On4cwl1899w9kcJv71r2nZ/VqNSdp6AGp7MHp7vkAAbE0w==
+  api_key:
+  pass_ph:
+  api_sec:
 
 crypto_currency:
   Litecoin: LTC-USD
