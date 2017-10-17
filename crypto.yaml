@@ -10,3 +10,5 @@ crypto_currency:
   Litecoin: LTC-USD
   Bitcoin: BTC-USD
   Ethirium: ETH-USD
+
+sleeptime: 2
