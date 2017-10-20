@@ -8,7 +8,7 @@
 
 import json, hmac, hashlib, time, requests, base64, yaml, datetime, time
 from requests.auth import AuthBase
-from sys import stdout
+from sys import stdout, argv
 
 # Create custom authentication for Exchange
 
@@ -145,4 +145,7 @@ def get_ticker(buy_sum_price, ltc_balance):
 
 if __name__ == '__main__':
     pass
-    get_ticker(get_current_fill(-1), get_current_position())
+    if len(argv) > 0:
+        get_ticker(get_current_fill(int(argv[1])), get_current_position())
+    else:
+        get_ticker(get_current_fill(), get_current_position())
