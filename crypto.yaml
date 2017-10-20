@@ -1,6 +1,9 @@
 url:
   gdax: https://api.gdax.com/
 
+websocket:
+  gdax: wss://ws-feed.gdax.com
+
 auth:
   api_key:
   pass_ph:
@@ -10,5 +13,8 @@ crypto_currency:
   Litecoin: LTC-USD
   Bitcoin: BTC-USD
   Ethirium: ETH-USD
+
+crypto_account:
+  Litecoin:
 
 sleeptime: 2
