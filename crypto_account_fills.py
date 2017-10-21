@@ -8,7 +8,7 @@
 
 import json, hmac, hashlib, time, requests, base64, yaml, datetime, time
 from requests.auth import AuthBase
-from sys import stdout, argv
+from sys import stdout
 
 # Create custom authentication for Exchange
 
@@ -40,19 +40,31 @@ with open("crypto.yaml", 'r') as ymlfile:
     cfg = yaml.load(ymlfile)
 
 api_url = cfg['url']['gdax']
+litecoin_id = cfg['crypto_account']['Litecoin']
 API_KEY = cfg['auth']['api_key']
 API_SECRET = cfg['auth']['api_sec']
 API_PASS = cfg['auth']['pass_ph']
 auth = CoinbaseExchangeAuth(API_KEY, API_SECRET, API_PASS)
 
 
-def get_current_fill(days=0):
+def get_last_trade_date():
+    ledger = requests.get(api_url + 'accounts/'+litecoin_id+'/ledger', auth=auth)
+    current_ledger = ledger.json()
+
+    #print json.dumps(current_ledger, indent=4)
+    # get the last trade date which is the first dictionary item from the ledger
+    last_trade_date = current_ledger[0]['created_at'][:10]
+    return last_trade_date
+
+
+def get_current_fill(last_trade_date):
     # Get Fills information
     fills = requests.get(api_url + 'fills', auth=auth)
     list_fills = fills.json()
-    # Get the number  when the order was filled
-    day = days * - 1
-    fill_date = (datetime.datetime.now() + datetime.timedelta(days=day)).strftime('%Y-%m-%d')
+    # Get the date when the order was filled
+    # day = days * - 1
+    fill_date = last_trade_date
+    # custom_date = (datetime.datetime.now() + datetime.timedelta(days=day)).strftime('%Y-%m-%d')
     # Initialise variables
     buy_sum_size = 0
     sell_sum_size = 0
@@ -109,13 +121,13 @@ def get_current_position():
     position = requests.get(api_url + 'position', auth=auth)
     list_position = position.json()
 
-    #print json.dumps(list_position, indent=4)
+    # print json.dumps(list_position, indent=4)
 
     ltc_balance = float(list_position['accounts']['LTC']['balance'])
     usd_balance = float(list_position['accounts']['USD']['balance'])
 
-    print "\n"
-    print "*" * 30
+    # print "\n"
+    # print "*" * 30
     print "Current LTC Balance: {:,.5f} \nCurrent USD Balance: {:,.2f}".format(ltc_balance,
                                                                                usd_balance)
     print "*" * 30
@@ -145,7 +157,4 @@ def get_ticker(buy_sum_price, ltc_balance):
 
 if __name__ == '__main__':
     pass
-    if len(argv) > 0:
-        get_ticker(get_current_fill(int(argv[1])), get_current_position())
-    else:
-        get_ticker(get_current_fill(), get_current_position())
+    get_ticker(get_current_fill(get_last_trade_date()), get_current_position())
