@@ -145,6 +145,8 @@ def get_ticker(buy_sum_price, ltc_balance):
             break
         else:
             live_LTC = ticker.json()
+            if ltc_balance == 0:
+                buy_sum_price = 0
             stdout.write("\rLive Price: %s -:- Current Value of Total LTC holdings: %s -:- Net Gain/Loss: %s" %
                          ('${:0,.2f}'.format(float(live_LTC['price'])),
                           '${:0,.2f}'.format(float(live_LTC['price']) * ltc_balance),
